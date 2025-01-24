@@ -1,6 +1,6 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { Button } from "./components/ui/button";
-import Auth from "./pages/auth/Auth.1";
+import Auth from "./pages/auth/Auth";
 import Chat from "./pages/chat/Chat";
 import Profile from "./pages/profile/Profile";
 
