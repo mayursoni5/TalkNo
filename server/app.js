@@ -1,13 +1,15 @@
-import expess from "express";
+import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import mongoose from "mongoose";
 import authRoutes from "./routes/AuthRoute.js";
+import path from "path";
+const __dirname = path.resolve();
 
 dotenv.config();
 
-const app = expess();
+const app = express();
 const port = process.env.PORT || 3000;
 const databaseUrl = process.env.DATABASE_URL;
 
@@ -19,8 +21,10 @@ app.use(
   })
 );
 
+// app.use("/uploads/profiles", express.static("/uploads/profiles"));
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use(cookieParser());
-app.use(expess.json());
+app.use(express.json());
 
 app.use("/api/auth", authRoutes);
 
