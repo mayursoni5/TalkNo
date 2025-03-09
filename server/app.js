@@ -6,6 +6,8 @@ import mongoose from "mongoose";
 import authRoutes from "./routes/AuthRoute.js";
 import path from "path";
 import contactsRoutes from "./routes/ContactRoutes.js";
+import setupSocket from "./socket.js";
+
 const __dirname = path.resolve();
 
 dotenv.config();
@@ -30,9 +32,11 @@ app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/api/contacts", contactsRoutes);
 
-app.listen(port, () => {
+const server = app.listen(port, () => {
   console.log(`The Server is running on ${port}`);
 });
+
+setupSocket(server);
 
 mongoose
   .connect(databaseUrl)
