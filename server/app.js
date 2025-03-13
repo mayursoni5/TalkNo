@@ -7,6 +7,7 @@ import authRoutes from "./routes/AuthRoute.js";
 import path from "path";
 import contactsRoutes from "./routes/ContactRoutes.js";
 import setupSocket from "./socket.js";
+import MessagesRoutes from "./routes/MessagesRoute.js";
 
 const __dirname = path.resolve();
 
@@ -31,6 +32,7 @@ app.use(express.json());
 
 app.use("/api/auth", authRoutes);
 app.use("/api/contacts", contactsRoutes);
+app.use("/api/messages", MessagesRoutes);
 
 const server = app.listen(port, () => {
   console.log(`The Server is running on ${port}`);

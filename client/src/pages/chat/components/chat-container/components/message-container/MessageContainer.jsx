@@ -1,17 +1,46 @@
+import { apiClient } from "@/lib/api-client";
 import { useAppStore } from "@/store";
+import { GET_ALL_MESSAGES_ROUTES } from "@/utils/constants";
 import moment from "moment";
 import { useEffect, useRef } from "react";
 
 function MessageContainer() {
   const scrollRef = useRef();
-  const { selectedChatData, selectedChatType, userInfo, selectedChatMessages } =
-    useAppStore();
+  const {
+    selectedChatData,
+    selectedChatType,
+    userInfo,
+    selectedChatMessages,
+    setSelectedChatMessages,
+  } = useAppStore();
+
+  useEffect(() => {
+    const getMessages = async () => {
+      try {
+        const res = await apiClient.post(
+          GET_ALL_MESSAGES_ROUTES,
+          { id: selectedChatData._id },
+          { withCredentials: true }
+        );
+        if (res.data.messages) {
+          setSelectedChatMessages(res.data.messages);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    if (selectedChatData._id) {
+      if (selectedChatType === "contact") {
+        getMessages();
+      }
+    }
+  }, [selectedChatData, selectedChatType, setSelectedChatMessages]);
 
   useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollIntoView({ behavior: "smooth" });
     }
-  }, [selectedChatMessages]);
+  }, [selectedChatMessages.length]);
 
   const renderMessages = () => {
     let lastDate = null;
@@ -35,7 +64,7 @@ function MessageContainer() {
   const renderDMMessages = (message) => (
     <div
       className={`${
-        message.sender !== selectedChatData._id ? "text-left" : "text-right"
+        message.sender !== selectedChatData._id ? "text-right" : "text-left"
       }`}
     >
       {message.messageType === "text" && (
@@ -56,7 +85,7 @@ function MessageContainer() {
   );
 
   return (
-    <div className="flex-1 overflow-y-auto scrollbar-hidden p-4 px-8 md:w-[65vw] lg:w-[70vw] xl:w-[80vw] w-full">
+    <div className="flex-1 overflow-y-auto scrollbar-hidden custom-scrollbar p-4 px-8 md:w-[65vw] lg:w-[70vw] xl:w-[80vw] w-full">
       {renderMessages()}
       <div ref={scrollRef} />
     </div>
