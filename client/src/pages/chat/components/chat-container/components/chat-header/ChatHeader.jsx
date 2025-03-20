@@ -21,7 +21,7 @@ function ChatHeader() {
               />
             ) : (
               <div
-                className={`uppercase h-14 w-14 lg:h-16 lg:w-16 text-xl md:text-2xl font-semibold border-[5px] flex items-center justify-center rounded-full ${getColor(
+                className={`uppercase h-14 w-14 lg:h-16 lg:w-16 text-2xl md:text-3xl font-semibold border-[5px] flex items-center justify-center rounded-full ${getColor(
                   selectedChatData?.color || "defaultColor"
                 )}`}
               >
