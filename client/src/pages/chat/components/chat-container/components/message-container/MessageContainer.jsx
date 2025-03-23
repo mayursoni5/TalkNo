@@ -1,8 +1,10 @@
 import { apiClient } from "@/lib/api-client";
 import { useAppStore } from "@/store";
-import { GET_ALL_MESSAGES_ROUTES } from "@/utils/constants";
+import { GET_ALL_MESSAGES_ROUTES, HOST } from "@/utils/constants";
 import moment from "moment";
 import { useEffect, useRef } from "react";
+import { MdFolderZip } from "react-icons/md";
+import { IoMdArrowRoundDown } from "react-icons/io";
 
 function MessageContainer() {
   const scrollRef = useRef();
@@ -42,6 +44,12 @@ function MessageContainer() {
     }
   }, [selectedChatMessages.length]);
 
+  const checkIfImage = (filePath) => {
+    const imageRegex =
+      /\.(jpg|jpeg|png|gif|bmp|tiff|tif|webp|svg|ico|heic|heif)$/i;
+    return imageRegex.test(filePath);
+  };
+
   const renderMessages = () => {
     let lastDate = null;
     return selectedChatMessages.map((message, index) => {
@@ -61,6 +69,18 @@ function MessageContainer() {
     });
   };
 
+  const downloadFile = async (url) => {
+    const res = await apiClient.get(`${HOST}${url}`, { responseType: "blob" });
+    const urlBlob = Window.URL.createObjectURL(new Blob([res.data]));
+    const link = document.createElement("a");
+    link.href = urlBlob;
+    link.setAttribute("download", url.split("/").pop());
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    window.URL.revokeObjectURL(urlBlob);
+  };
+
   const renderDMMessages = (message) => (
     <div
       className={`${
@@ -76,6 +96,46 @@ function MessageContainer() {
           } border inline-block p-4 rounded my-1 max-w-[50%] break-words`}
         >
           {message.content}
+        </div>
+      )}
+      {message.messageType === "file" && (
+        <div
+          className={`${
+            message.sender !== selectedChatData._id
+              ? " bg-[#8417ff]/5 text-[#8417ff]/90 border-[#8417ff]/50"
+              : " bg-[#2a2b33]/5 text-white/80 border-[#ffffff]/20"
+          } border inline-block p-4 rounded my-1 max-w-[50%] break-words`}
+        >
+          {checkIfImage(message.fileUrl) ? (
+            <div className=" cursor-pointer">
+              <img
+                src={`${HOST}${message.fileUrl}`}
+                alt="!!Image Not Loaded!!"
+                height={300}
+                width={300}
+              />
+            </div>
+          ) : (
+            <div className="flex items-center justify-center gap-4">
+              <span className="text-white/8 text-3xl bg-black/20 rounded-full p-3">
+                <MdFolderZip />
+              </span>
+              <span
+                className="break-words max-w-full w-full mt-2 overflow-hidden"
+                style={{ wordBreak: "break-word", whiteSpace: "normal" }}
+              >
+                {message.fileUrl.split("/").pop().length > 35
+                  ? message.fileUrl.split("/").pop().slice(0, 20) + "..."
+                  : message.fileUrl.split("/").pop()}
+              </span>
+              <span
+                className=" bg-black/20 p-3 text-2xl rounded-full hover:bg-black/50 cursor-pointer transition-all duration-300"
+                onClick={() => downloadFile(message.fileUrl)}
+              >
+                <IoMdArrowRoundDown />
+              </span>
+            </div>
+          )}
         </div>
       )}
       <div className="text-xs text-gray-600">
