@@ -12,26 +12,34 @@ function ChatHeader() {
       <div className="flex items-center gap-4 sm:gap-6 w-full justify-between">
         {/* Avatar and User Info */}
         <div className="flex gap-4 sm:gap-6 items-center">
-          <Avatar className="h-14 w-14 lg:h-16 lg:w-16 rounded-full overflow-hidden">
-            {selectedChatData?.image ? (
-              <AvatarImage
-                src={`${HOST.replace(/\/$/, "")}/${selectedChatData.image}`}
-                alt="profile"
-                className="object-cover w-full h-full bg-black"
-              />
-            ) : (
-              <div
-                className={`uppercase h-14 w-14 lg:h-16 lg:w-16 text-2xl md:text-3xl font-semibold border-[5px] flex items-center justify-center rounded-full ${getColor(
-                  selectedChatData?.color || "defaultColor"
-                )}`}
-              >
-                {selectedChatData?.firstName
-                  ? selectedChatData.firstName.charAt(0)
-                  : selectedChatData?.email?.charAt(0) || "?"}
-              </div>
-            )}
-          </Avatar>
+          {selectedChatType === "contact" ? (
+            <Avatar className="h-14 w-14 lg:h-16 lg:w-16 rounded-full overflow-hidden">
+              {selectedChatData?.image ? (
+                <AvatarImage
+                  src={`${HOST.replace(/\/$/, "")}/${selectedChatData.image}`}
+                  alt="profile"
+                  className="object-cover w-full h-full bg-black"
+                />
+              ) : (
+                <div
+                  className={`uppercase h-14 w-14 lg:h-16 lg:w-16 text-2xl md:text-3xl font-semibold border-[5px] flex items-center justify-center rounded-full ${getColor(
+                    selectedChatData?.color || "defaultColor"
+                  )}`}
+                >
+                  {selectedChatData?.firstName
+                    ? selectedChatData.firstName.charAt(0)
+                    : selectedChatData?.email?.charAt(0) || "?"}
+                </div>
+              )}
+            </Avatar>
+          ) : (
+            <div className="bg-[#ffffff22] h-10 w-10 flex items-center justify-center rounded-full">
+              #
+            </div>
+          )}
+
           {/* Display Contact Name or Email */}
+          {selectedChatType === "channel" && selectedChatData.name}
           {selectedChatType === "contact" && (
             <span className="text-lg sm:text-xl md:text-xl font-medium truncate max-w-[180px] sm:max-w-[220px] md:max-w-[250px]">
               {selectedChatData?.firstName && selectedChatData?.lastName
