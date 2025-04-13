@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import NewDm from "./components/new-dm/NewDm";
+import NewDm from "./components/new-dm/NewDM";
 import ProfileInfo from "./components/profile-info/ProfileInfo";
 import { apiClient } from "@/lib/api-client";
 import {
