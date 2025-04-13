@@ -31,6 +31,9 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use(cookieParser());
 app.use(express.json());
 
+app.get("/", (req, res) => {
+  res.json({ msg: "Hello TalkNo" });
+});
 app.use("/api/auth", authRoutes);
 app.use("/api/contacts", contactsRoutes);
 app.use("/api/messages", MessagesRoutes);
