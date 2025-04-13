@@ -10,7 +10,6 @@ export const useSocket = () => {
 };
 
 export const SocketProvider = ({ children }) => {
-  // ✅ Fixed typo in `children`
   const socket = useRef(null);
   const { userInfo } = useAppStore();
 
@@ -35,12 +34,23 @@ export const SocketProvider = ({ children }) => {
             selectedChatData._id === message.recipient._id)
         ) {
           console.log("Message recieved", message);
+          addMessage(message);
+        }
+      };
 
+      const handleRecieveChannelMessage = (message) => {
+        const { selectedChatData, selectedChatType, addMessage } =
+          useAppStore.getState();
+        if (
+          selectedChatType !== undefined &&
+          selectedChatData._id === message.channelId
+        ) {
           addMessage(message);
         }
       };
 
       socket.current.on("recieveMessage", handleRecieveMessage);
+      socket.current.on("recieve-channel-message", handleRecieveChannelMessage);
 
       return () => {
         if (socket.current) {
@@ -53,7 +63,6 @@ export const SocketProvider = ({ children }) => {
   return (
     <SocketContext.Provider value={socket.current}>
       {" "}
-      {/* ✅ Added value */}
       {children}
     </SocketContext.Provider>
   );

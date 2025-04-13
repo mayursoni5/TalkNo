@@ -49,8 +49,16 @@ function MessageBar() {
         messageType: "text",
         fileUrl: undefined,
       });
-      setMessage("");
+    } else if (selectedChatType === "channel") {
+      socket.emit("send-channel-message", {
+        sender: userInfo.id,
+        content: message.trim(),
+        messageType: "text",
+        fileUrl: undefined,
+        channelId: selectedChatData._id,
+      });
     }
+    setMessage("");
   };
 
   const handleAttachmentClick = () => {
@@ -85,8 +93,16 @@ function MessageBar() {
             });
           }
         }
+        if (selectedChatType === "channel") {
+          socket.emit("send-channel-message", {
+            sender: userInfo.id,
+            content: undefined,
+            messageType: "file",
+            fileUrl: res.data.filePath,
+            channelId: selectedChatData._id,
+          });
+        }
       }
-      console.log({ file });
     } catch (error) {
       setIsUploading(false);
       console.log({ error });
