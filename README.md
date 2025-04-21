@@ -66,7 +66,7 @@ Make sure you have the following installed:
 ### 📁 Clone the Repository
 
 ```bash
-git clone https://github.com/yourusername/talkno.git
+git clone https://github.com/mayursoni5/TalkNo
 cd talkno
 ```
 
