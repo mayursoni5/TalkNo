@@ -2,25 +2,55 @@
 
 <img src="client\public\TalkNo_Logo.png" alt="TalkNo Logo" width="300" height="300">
 
-TalkNo is a real-time chat application that allows users to chat, share images/videos, send file attachments, and make voice/video calls. It also supports group chat functionality.
+TalkNO is a modern, full-stack real-time chat application that supports private messaging, group chats, user authentication, WebSocket-based real-time communication, and file uploads. Built using the **MERN stack**, it's designed to provide a fast and seamless chatting experience.
+
+Live Demo:
+
+- 🌐 Frontend: [talkno.vercel.app](https://talkno.vercel.app)
+- 🌐 Backend: [talkno-backend](https://talkno-api.up.railway.app/)
+
+---
 
 ## Features
 
-- ✅ One-on-one private messaging
+- 💬 One-on-one private messaging
 - ✅ Group chat functionality
-- ✅ Real-time messaging using WebSockets (Socket.IO)
-- ✅ File sharing (images, videos, documents)
-- ✅ User authentication (Sign up / Login)
-- ✅ Notifications for new messages and calls
+- 💬 Real-time messaging using WebSockets (Socket.IO)
+- 📤 File sharing (images, videos, documents)
+- 🔐 User authentication (Sign up / Login)
+- ✅ Toast notifications
+- 🌙 Beautiful dark UI with gradient theme
 
 ## Tech Stack
 
-- **Frontend:** React.js, Tailwind CSS
-- **Backend:** Node.js, Express.js
-- **Database:** MongoDB
-- **Real-time Communication:** Socket.IO, WebRTC
-- **Authentication:** JWT (JSON Web Token)
-- **Storage:** Cloud storage (AWS S3 or Firebase Storage)
+**Frontend:**
+
+- React
+- Tailwind CSS + ShadCN UI
+- Vite
+- Zustand for state management
+- Axios
+- Vercel (Deployment)
+
+**Backend:**
+
+- Node.js + Express
+- MongoDB + Mongoose
+- Real-time Communication with WebSocket (Socket.IO)
+- Cookie-based Authentication by JWT (JSON Web Token)
+- Railway (Deployment)
+
+---
+
+## 🗂️ Project Structure
+
+```
+talkno/
+├── client/        # Frontend (React)
+└── server/        # Backend (Express)
+```
+
+---
 
 ## Installation
 
@@ -33,27 +63,118 @@ Make sure you have the following installed:
 
 ### Steps to Run Locally
 
-1. **Clone the repository:**
-   ```sh
-   git clone https://github.com/mayursoni5/TalkNo.git
-   cd TalkNo
-   ```
-2. **Install dependencies:**
-   ```sh
-   npm install
-   ```
-3. **Set up environment variables:**
-   - Create a `.env` file in the root directory
-   - Add the required environment variables (MongoDB URI, JWT Secret, etc.)
-4. **Run the backend server:**
-   ```sh
-   npm start
-   ```
-5. **Run the frontend:**
-   - Navigate to the client folder and install dependencies:
-     ```sh
-     cd client
-     npm install
-     npm start
-     ```
-6. Open your browser and go to `http://localhost:3000`
+### 📁 Clone the Repository
+
+```bash
+git clone https://github.com/yourusername/talkno.git
+cd talkno
+```
+
+---
+
+## 🖥️ Frontend Setup
+
+```bash
+cd client
+npm install
+```
+
+### ➕ Create `.env` File
+
+```env
+VITE_BACKEND_URL=http://localhost:3000
+```
+
+### ▶️ Run the Frontend
+
+```bash
+npm run dev
+```
+
+---
+
+## 🖱️ Backend Setup
+
+```bash
+cd server
+npm install
+```
+
+### ➕ Create `.env` File
+
+```env
+PORT=3000
+DATABASE_URL=mongodb+srv://<username>:<password>@cluster0.mongodb.net/talkno
+ORIGIN=http://localhost:5173
+```
+
+### ▶️ Run the Backend
+
+```bash
+npm run dev
+```
+
+---
+
+## 📥 Important Dependencies
+
+### Frontend
+
+- `axios`
+- `zustand`
+- `sonner`
+- `react-router-dom`
+- `tailwindcss`
+- `shadcn/ui`
+
+### Backend
+
+- `express`
+- `mongoose`
+- `cors`
+- `dotenv`
+- `cookie-parser`
+- `socket.io`
+- `multer`
+
+---
+
+## 📸 Screenshots
+
+### Here are some screenshots, for example:
+
+- Login Page
+
+ <img src="client\public/auth-image.png" alt="TalkNo Logo">
+
+---
+
+- Profile Setup Page
+
+ <img src="client\public/profileSetup-image.png" alt="TalkNo Logo">
+
+---
+
+- Dashboard
+
+<img src="client\public/dashboard-image.png" alt="TalkNo Logo" >
+
+---
+
+- Chat Interface
+
+<img src="client\public/chat-image.png" alt="TalkNo Logo" >
+
+---
+
+- Group Chat
+
+<img src="client\public/channel-chat-image.png" alt="TalkNo Logo" >
+
+---
+
+## 🙇‍♂️ Author
+
+Made by [Mayur](https://github.com/mayursoni5)
+
+---
