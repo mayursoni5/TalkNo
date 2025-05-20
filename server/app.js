@@ -20,11 +20,14 @@ const databaseUrl = process.env.DATABASE_URL;
 
 app.use(
   cors({
-    origin: [process.env.ORIGIN],
-    methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
+    origin: (origin, callback) => {
+      callback(null, true);
+    },
     credentials: true,
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
   })
 );
+
 
 // app.use("/uploads/profiles", express.static("/uploads/profiles"));
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
