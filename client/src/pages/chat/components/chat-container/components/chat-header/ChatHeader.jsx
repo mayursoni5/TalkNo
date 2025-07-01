@@ -8,12 +8,12 @@ function ChatHeader() {
   const { closeChat, selectedChatData, selectedChatType } = useAppStore();
 
   return (
-    <div className="h-20 md:h-20 lg:h-24 max-h-[90px] border-b-2 border-[#2f303b] flex items-center justify-between px-10 sm:px-10 md:px-14">
-      <div className="flex items-center gap-4 sm:gap-6 w-full justify-between">
+    <div className="h-20 md:h-20 lg:h-24 max-h-[90px] border-b-2 border-[#2f303b] flex items-center justify-between px-4 sm:px-10 md:px-14">
+      <div className="flex items-center gap-2 sm:gap-4 md:gap-6 w-full justify-between">
         {/* Avatar and User Info */}
         <div className="flex gap-4 sm:gap-6 items-center">
           {selectedChatType === "contact" ? (
-            <Avatar className="h-14 w-14 lg:h-16 lg:w-16 rounded-full overflow-hidden">
+            <Avatar className="h-10 w-10 sm:h-12 sm:w-12 md:h-14 md:w-14 lg:h-16 lg:w-16 rounded-full overflow-hidden">
               {selectedChatData?.image ? (
                 <AvatarImage
                   src={`${HOST.replace(/\/$/, "")}/${selectedChatData.image}`}
@@ -22,7 +22,7 @@ function ChatHeader() {
                 />
               ) : (
                 <div
-                  className={`uppercase h-14 w-14 lg:h-16 lg:w-16 text-2xl md:text-3xl font-semibold border-[5px] flex items-center justify-center rounded-full ${getColor(
+                  className={`uppercase h-10 w-10 sm:h-12 sm:w-12 md:h-14 md:w-14 lg:h-16 lg:w-16 text-lg sm:text-xl md:text-2xl lg:text-3xl font-semibold border-[3px] sm:border-[4px] md:border-[5px] flex items-center justify-center rounded-full ${getColor(
                     selectedChatData?.color || "defaultColor"
                   )}`}
                 >
@@ -33,13 +33,17 @@ function ChatHeader() {
               )}
             </Avatar>
           ) : (
-            <div className="bg-[#ffffff22] h-10 w-10 flex items-center justify-center rounded-full">
+            <div className="bg-[#ffffff22] h-8 w-8 sm:h-9 sm:w-9 md:h-10 md:w-10 flex items-center justify-center rounded-full">
               #
             </div>
           )}
 
           {/* Display Contact Name or Email */}
-          {selectedChatType === "channel" && selectedChatData.name}
+          {selectedChatType === "channel" && (
+            <span className="text-lg sm:text-xl md:text-xl font-medium truncate max-w-[180px] sm:max-w-[220px] md:max-w-[250px]">
+              {selectedChatData.name}
+            </span>
+          )}
           {selectedChatType === "contact" && (
             <span className="text-lg sm:text-xl md:text-xl font-medium truncate max-w-[180px] sm:max-w-[220px] md:max-w-[250px]">
               {selectedChatData?.firstName && selectedChatData?.lastName

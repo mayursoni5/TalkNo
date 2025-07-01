@@ -132,7 +132,7 @@ function MessageContainer() {
             message.sender !== selectedChatData._id
               ? " bg-[#8417ff]/5 text-[#8417ff]/90 border-[#8417ff]/50"
               : " bg-[#2a2b33]/5 text-white/80 border-[#ffffff]/20"
-          } border inline-block p-4 rounded my-1 max-w-[50%] break-words`}
+          } border inline-block p-2 sm:p-3 md:p-4 rounded my-1 max-w-[75%] sm:max-w-[65%] md:max-w-[50%] break-words`}
         >
           {message.content}
         </div>
@@ -143,7 +143,7 @@ function MessageContainer() {
             message.sender !== selectedChatData._id
               ? " bg-[#8417ff]/5 text-[#8417ff]/90 border-[#8417ff]/50"
               : " bg-[#2a2b33]/5 text-white/80 border-[#ffffff]/20"
-          } border inline-block p-4 rounded my-1 max-w-[50%] break-words`}
+          } border inline-block p-2 sm:p-3 md:p-4 rounded my-1 max-w-[75%] sm:max-w-[65%] md:max-w-[50%] break-words`}
         >
           {checkIfImage(message.fileUrl) ? (
             <div
@@ -192,7 +192,7 @@ function MessageContainer() {
   const renderChannelMessages = (message) => {
     return (
       <div
-        className={`mt-5 ${
+        className={`mt-3 sm:mt-4 md:mt-5 ${
           message.sender._id !== userInfo.id ? "text-left" : "text-right"
         }`}
       >
@@ -202,7 +202,7 @@ function MessageContainer() {
               message.sender._id === userInfo.id
                 ? " bg-[#8417ff]/5 text-[#8417ff]/90 border-[#8417ff]/50"
                 : " bg-[#2a2b33]/5 text-white/80 border-[#ffffff]/20"
-            } border inline-block p-4 rounded my-1 max-w-[50%] break-words ml-8 mr-2`}
+            } border inline-block p-2 sm:p-3 md:p-4 rounded my-1 max-w-[75%] sm:max-w-[65%] md:max-w-[50%] break-words ml-4 sm:ml-6 md:ml-8 mr-1 sm:mr-2`}
           >
             {message.content}
           </div>
@@ -213,7 +213,7 @@ function MessageContainer() {
               message.sender._id === userInfo.id
                 ? " bg-[#8417ff]/5 text-[#8417ff]/90 border-[#8417ff]/50"
                 : " bg-[#2a2b33]/5 text-white/80 border-[#ffffff]/20"
-            } border inline-block p-4 rounded my-1 max-w-[50%] break-words`}
+            } border inline-block p-2 sm:p-3 md:p-4 rounded my-1 max-w-[75%] sm:max-w-[65%] md:max-w-[50%] break-words`}
           >
             {checkIfImage(message.fileUrl) ? (
               <div
@@ -290,27 +290,27 @@ function MessageContainer() {
   };
 
   return (
-    <div className="flex-1 overflow-y-auto scrollbar-hidden custom-scrollbar p-4 px-8 md:w-[65vw] lg:w-[70vw] xl:w-[80vw] w-full">
+    <div className="flex-1 overflow-y-auto scrollbar-hidden custom-scrollbar p-4 px-4 sm:px-6 md:px-8 md:w-[65vw] lg:w-[70vw] xl:w-[80vw] w-full">
       {renderMessages()}
       <div ref={scrollRef} />
       {showImage && (
-        <div className=" fixed z-[1000] top-0 left-0 h-[100vh] w-[100vw] flex items-center justify-center backdrop-blur-lg flex-col">
-          <div>
+        <div className="fixed z-[1000] top-0 left-0 h-[100vh] w-[100vw] flex items-center justify-center backdrop-blur-lg flex-col">
+          <div className="w-[90%] sm:w-[80%] md:w-[70%] max-h-[80vh] overflow-hidden">
             <img
               src={`${HOST}${imageURL}`}
               alt=""
-              className="h-[80vh] w-full bg-cover"
+              className="max-h-[70vh] w-full object-contain"
             />
           </div>
-          <div className="flex gap-5 fixed top-0 mt-5">
+          <div className="flex gap-3 sm:gap-5 fixed top-2 sm:top-5 right-2 sm:right-5">
             <button
-              className=" bg-black/20 p-3 text-2xl rounded-full hover:bg-black/50 cursor-pointer transition-all duration-300"
+              className="bg-black/20 p-2 sm:p-3 text-xl sm:text-2xl rounded-full hover:bg-black/50 cursor-pointer transition-all duration-300"
               onClick={() => downloadFile(imageURL)}
             >
               <IoMdArrowRoundDown />
             </button>
             <button
-              className=" bg-black/20 p-3 text-2xl rounded-full hover:bg-black/50 cursor-pointer transition-all duration-300"
+              className="bg-black/20 p-2 sm:p-3 text-xl sm:text-2xl rounded-full hover:bg-black/50 cursor-pointer transition-all duration-300"
               onClick={() => {
                 setShowImage(false);
                 setImageURL(null);

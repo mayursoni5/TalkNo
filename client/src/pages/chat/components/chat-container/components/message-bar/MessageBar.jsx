@@ -110,12 +110,12 @@ function MessageBar() {
   };
 
   return (
-    <div className="h-auto min-h-[60px] md:min-h-[70px] lg:min-h-[80px] bg-[#1c1d25] flex justify-center items-center px-3 sm:px-5 md:px-8 py-3 mb-4 sm:mb-6 md:mb-0 lg:mb-0 xl:mb-0 gap-2 sm:gap-4 md:gap-6">
-      <div className="flex-1 flex bg-[#2a2b33] rounded-md items-center gap-2 sm:gap-3 md:gap-5 pr-2 sm:pr-3 md:pr-5">
+    <div className="h-auto min-h-[50px] sm:min-h-[60px] md:min-h-[70px] lg:min-h-[80px] bg-[#1c1d25] flex justify-center items-center px-2 sm:px-5 md:px-8 py-2 sm:py-3 mb-2 sm:mb-4 md:mb-0 lg:mb-0 xl:mb-0 gap-1 sm:gap-3 md:gap-6">
+      <div className="flex-1 flex bg-[#2a2b33] rounded-md items-center gap-1 sm:gap-2 md:gap-3 lg:gap-5 pr-1 sm:pr-2 md:pr-3 lg:pr-5">
         <input
           type="text"
           placeholder="Enter Message"
-          className="flex-1 py-3 px-2 sm:p-3 md:p-5 bg-transparent rounded-md focus:border-none focus:outline-none text-sm sm:text-base"
+          className="flex-1 py-2 px-2 sm:py-3 sm:px-3 md:p-4 lg:p-5 bg-transparent rounded-md focus:border-none focus:outline-none text-xs sm:text-sm md:text-base"
           value={message}
           onChange={(e) => setMessage(e.target.value)}
         />
@@ -139,9 +139,10 @@ function MessageBar() {
             <RiEmojiStickerLine className="text-xl sm:text-2xl" />
           </button>
           <div
-            className="absolute bottom-12 sm:bottom-16 right-0 z-50"
+            className="absolute bottom-10 sm:bottom-12 md:bottom-16 right-0 z-50"
             ref={emojiRef}
           >
+            {/* Desktop and tablet emoji picker */}
             <div className="hidden sm:block">
               <EmojiPicker
                 theme="dark"
@@ -152,6 +153,7 @@ function MessageBar() {
                 height={400}
               />
             </div>
+            {/* Mobile emoji picker */}
             <div className="block sm:hidden">
               <EmojiPicker
                 theme="dark"
@@ -159,7 +161,7 @@ function MessageBar() {
                 onEmojiClick={handleAddEmoji}
                 autoFocusSearch={false}
                 width={250}
-                height={350}
+                height={300}
               />
             </div>
           </div>
