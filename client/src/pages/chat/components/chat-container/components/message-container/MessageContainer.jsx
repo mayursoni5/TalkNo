@@ -15,6 +15,7 @@ import { getColor } from "@/lib/utils";
 
 function MessageContainer() {
   const scrollRef = useRef();
+  const messagesContainerRef = useRef();
   const {
     selectedChatData,
     selectedChatType,
@@ -23,20 +24,34 @@ function MessageContainer() {
     setSelectedChatMessages,
     setIsDownloading,
     setFileDownloadProgress,
+    messagesPagination,
+    setMessagesPagination,
+    setIsLoadingMore,
+    loadMoreMessages,
+    isNewMessage,
   } = useAppStore();
   const [showImage, setShowImage] = useState(false);
   const [imageURL, setImageURL] = useState(null);
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
+  const [isLoadingOlder, setIsLoadingOlder] = useState(false);
 
   useEffect(() => {
     const getMessages = async () => {
       try {
+        setIsInitialLoad(true);
         const res = await apiClient.post(
           GET_ALL_MESSAGES_ROUTES,
-          { id: selectedChatData._id },
+          { id: selectedChatData._id, page: 1, limit: 20 },
           { withCredentials: true }
         );
         if (res.data.messages) {
           setSelectedChatMessages(res.data.messages);
+          setMessagesPagination({
+            hasMore: res.data.hasMore,
+            currentPage: res.data.currentPage,
+            isLoadingMore: false,
+            totalMessages: res.data.totalMessages,
+          });
         }
       } catch (error) {
         console.log(error);
@@ -44,12 +59,19 @@ function MessageContainer() {
     };
     const getChannelMessages = async () => {
       try {
+        setIsInitialLoad(true);
         const res = await apiClient.get(
-          `${GET_CHANNEL_MESSAGES_ROUTE}/${selectedChatData._id}`,
+          `${GET_CHANNEL_MESSAGES_ROUTE}/${selectedChatData._id}?page=1&limit=20`,
           { withCredentials: true }
         );
         if (res.data.messages) {
           setSelectedChatMessages(res.data.messages);
+          setMessagesPagination({
+            hasMore: res.data.hasMore,
+            currentPage: res.data.currentPage,
+            isLoadingMore: false,
+            totalMessages: res.data.totalMessages,
+          });
         }
       } catch (error) {
         console.log(error);
@@ -63,13 +85,98 @@ function MessageContainer() {
         getChannelMessages();
       }
     }
-  }, [selectedChatData, selectedChatType, setSelectedChatMessages]);
+  }, [
+    selectedChatData,
+    selectedChatType,
+    setSelectedChatMessages,
+    setMessagesPagination,
+  ]);
 
   useEffect(() => {
-    if (scrollRef.current) {
+    if (
+      scrollRef.current &&
+      (isInitialLoad || isNewMessage) &&
+      !messagesPagination.isLoadingMore &&
+      !isLoadingOlder
+    ) {
       scrollRef.current.scrollIntoView({ behavior: "smooth" });
     }
-  }, [selectedChatMessages.length]);
+  }, [
+    selectedChatMessages.length,
+    isInitialLoad,
+    isNewMessage,
+    messagesPagination.isLoadingMore,
+    isLoadingOlder,
+  ]);
+
+  const loadOlderMessages = async () => {
+    if (messagesPagination.isLoadingMore || !messagesPagination.hasMore) return;
+
+    const container = messagesContainerRef.current;
+    const previousScrollHeight = container.scrollHeight;
+
+    setIsLoadingMore(true);
+    setIsInitialLoad(false);
+    setIsLoadingOlder(true);
+    const nextPage = messagesPagination.currentPage + 1;
+
+    try {
+      if (selectedChatType === "contact") {
+        const res = await apiClient.post(
+          GET_ALL_MESSAGES_ROUTES,
+          { id: selectedChatData._id, page: nextPage, limit: 20 },
+          { withCredentials: true }
+        );
+        if (res.data.messages) {
+          loadMoreMessages(res.data.messages, {
+            hasMore: res.data.hasMore,
+            currentPage: res.data.currentPage,
+            totalMessages: res.data.totalMessages,
+          });
+
+          setTimeout(() => {
+            const newScrollHeight = container.scrollHeight;
+            container.scrollTop = newScrollHeight - previousScrollHeight;
+            setIsLoadingOlder(false);
+          }, 0);
+        }
+      } else if (selectedChatType === "channel") {
+        const res = await apiClient.get(
+          `${GET_CHANNEL_MESSAGES_ROUTE}/${selectedChatData._id}?page=${nextPage}&limit=20`,
+          { withCredentials: true }
+        );
+        if (res.data.messages) {
+          loadMoreMessages(res.data.messages, {
+            hasMore: res.data.hasMore,
+            currentPage: res.data.currentPage,
+            totalMessages: res.data.totalMessages,
+          });
+
+          setTimeout(() => {
+            const newScrollHeight = container.scrollHeight;
+            container.scrollTop = newScrollHeight - previousScrollHeight;
+            setIsLoadingOlder(false);
+          }, 0);
+        }
+      }
+    } catch (error) {
+      console.log(error);
+      setIsLoadingMore(false);
+    }
+  };
+
+  const handleScroll = () => {
+    if (messagesContainerRef.current) {
+      const { scrollTop } = messagesContainerRef.current;
+      if (
+        scrollTop <= 0 &&
+        messagesPagination.hasMore &&
+        !messagesPagination.isLoadingMore
+      ) {
+        loadOlderMessages();
+      }
+    }
+  };
 
   const checkIfImage = (filePath) => {
     const imageRegex =
@@ -290,7 +397,18 @@ function MessageContainer() {
   };
 
   return (
-    <div className="flex-1 overflow-y-auto scrollbar-hidden custom-scrollbar p-4 px-4 sm:px-6 md:px-8 md:w-[65vw] lg:w-[70vw] xl:w-[80vw] w-full">
+    <div
+      ref={messagesContainerRef}
+      className="flex-1 overflow-y-auto scrollbar-hidden custom-scrollbar p-4 px-4 sm:px-6 md:px-8 md:w-[65vw] lg:w-[70vw] xl:w-[80vw] w-full"
+      onScroll={handleScroll}
+    >
+      {messagesPagination.isLoadingMore && (
+        <div className="flex justify-center py-4">
+          <div className="text-neutral-400 text-sm">
+            Loading older messages...
+          </div>
+        </div>
+      )}
       {renderMessages()}
       <div ref={scrollRef} />
       {showImage && (

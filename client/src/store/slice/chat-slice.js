@@ -9,6 +9,13 @@ export const createChatSlice = (set, get) => ({
   fileDownloadProgress: 0,
   channels: [],
   onlineUsers: new Set(),
+  messagesPagination: {
+    hasMore: true,
+    currentPage: 1,
+    isLoadingMore: false,
+    totalMessages: 0,
+  },
+  isNewMessage: false,
   setChannels: (channels) => set({ channels }),
   setIsUploading: (isUploading) => set({ isUploading }),
   setIsDownloading: (isDownloading) => set({ isDownloading }),
@@ -32,6 +39,26 @@ export const createChatSlice = (set, get) => ({
     set({ selectedChatMessages }),
   setDirectMessagesContacts: (directMessagesContacts) =>
     set({ directMessagesContacts }),
+  setMessagesPagination: (pagination) =>
+    set({ messagesPagination: pagination }),
+  setIsLoadingMore: (isLoadingMore) => {
+    const messagesPagination = get().messagesPagination;
+    set({ messagesPagination: { ...messagesPagination, isLoadingMore } });
+  },
+  loadMoreMessages: (newMessages, paginationData) => {
+    const selectedChatMessages = get().selectedChatMessages;
+    set({
+      selectedChatMessages: [...newMessages, ...selectedChatMessages],
+      messagesPagination: {
+        hasMore: paginationData.hasMore,
+        currentPage: paginationData.currentPage,
+        isLoadingMore: false,
+        totalMessages: paginationData.totalMessages,
+      },
+      isNewMessage: false,
+    });
+  },
+  setIsNewMessage: (isNewMessage) => set({ isNewMessage }),
   addChannel: (channel) => {
     const channels = get().channels;
     set({ channels: [channel, ...channels] });
@@ -42,6 +69,13 @@ export const createChatSlice = (set, get) => ({
       selectedChatType: undefined,
       selectedChatData: undefined,
       selectedChatMessages: [],
+      messagesPagination: {
+        hasMore: true,
+        currentPage: 1,
+        isLoadingMore: false,
+        totalMessages: 0,
+      },
+      isNewMessage: false,
     }),
   addMessage: (message) => {
     const selectedChatMessages = get().selectedChatMessages;
@@ -62,6 +96,7 @@ export const createChatSlice = (set, get) => ({
               : message.sender._id,
         },
       ],
+      isNewMessage: true,
     });
   },
   addChannelInChannelList: (message) => {
