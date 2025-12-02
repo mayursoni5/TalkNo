@@ -230,13 +230,13 @@ function MessageContainer() {
   const renderDMMessages = (message) => (
     <div
       className={`${
-        message.sender !== selectedChatData._id ? "text-right" : "text-left"
+        message.sender._id === userInfo.id ? "text-right" : "text-left"
       }`}
     >
       {message.messageType === "text" && (
         <div
           className={`${
-            message.sender !== selectedChatData._id
+            message.sender._id === userInfo.id
               ? " bg-[#8417ff]/5 text-[#8417ff]/90 border-[#8417ff]/50"
               : " bg-[#2a2b33]/5 text-white/80 border-[#ffffff]/20"
           } border inline-block p-2 sm:p-3 md:p-4 rounded my-1 max-w-[75%] sm:max-w-[65%] md:max-w-[50%] break-words`}
@@ -247,7 +247,7 @@ function MessageContainer() {
       {message.messageType === "file" && (
         <div
           className={`${
-            message.sender !== selectedChatData._id
+            message.sender._id === userInfo.id
               ? " bg-[#8417ff]/5 text-[#8417ff]/90 border-[#8417ff]/50"
               : " bg-[#2a2b33]/5 text-white/80 border-[#ffffff]/20"
           } border inline-block p-2 sm:p-3 md:p-4 rounded my-1 max-w-[75%] sm:max-w-[65%] md:max-w-[50%] break-words`}

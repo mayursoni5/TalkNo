@@ -63,6 +63,20 @@ export const createChatSlice = (set, get) => ({
     const channels = get().channels;
     set({ channels: [channel, ...channels] });
   },
+  updateChannel: (updatedChannel) => {
+    const channels = get().channels;
+    const channelIndex = channels.findIndex(
+      (ch) => ch._id === updatedChannel._id
+    );
+    if (channelIndex !== -1) {
+      channels[channelIndex] = updatedChannel;
+      set({ channels: [...channels] });
+    }
+  },
+  removeChannel: (channelId) => {
+    const channels = get().channels;
+    set({ channels: channels.filter((ch) => ch._id !== channelId) });
+  },
 
   closeChat: () =>
     set({
@@ -91,9 +105,7 @@ export const createChatSlice = (set, get) => ({
               ? message.recipient
               : message.recipient._id,
           sender:
-            selectedChatType === "channel"
-              ? message.sender
-              : message.sender._id,
+            selectedChatType === "channel" ? message.sender : message.sender,
         },
       ],
       isNewMessage: true,
@@ -124,14 +136,10 @@ export const createChatSlice = (set, get) => ({
     const data = dmContacts.find((contact) => contact._id === fromId);
     const index = dmContacts.findIndex((contact) => contact._id === fromId);
 
-    console.log({ data, index, dmContacts, userId, message, fromData });
-
     if (index !== -1 && index !== undefined) {
-      console.log("in if condition");
       dmContacts.splice(index, 1);
       dmContacts.unshift(data);
     } else {
-      console.log("in else condition");
       dmContacts.unshift(fromData);
     }
 

@@ -9,6 +9,15 @@ import {
 import { useAppStore } from "@/store";
 import ContactList from "@/components/contact-list";
 import CreateChannel from "./components/create-channel/CreateChannel";
+import BrowseChannels from "./components/browse-channels/BrowseChannels";
+import { useState } from "react";
+import { FiSearch } from "react-icons/fi";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 function ContactsContainer() {
   const {
@@ -17,6 +26,8 @@ function ContactsContainer() {
     channels,
     setChannels,
   } = useAppStore();
+
+  const [showBrowseChannels, setShowBrowseChannels] = useState(false);
 
   useEffect(() => {
     const getContacts = async () => {
@@ -58,13 +69,32 @@ function ContactsContainer() {
       <div className="my-5">
         <div className="flex items-center justify-between px-10">
           <Title text="Channels" />
-          <CreateChannel />
+          <div className="flex items-center gap-2">
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger>
+                  <FiSearch
+                    className="text-neutral-400 font-light text-opacity-90 text-sm hover:text-neutral-100 cursor-pointer transition-all duration-300"
+                    onClick={() => setShowBrowseChannels(true)}
+                  />
+                </TooltipTrigger>
+                <TooltipContent>Browse Channels</TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+            <CreateChannel />
+          </div>
         </div>
         <div className="max-h-[35vh] overflow-y-auto scrollbar-thin">
           <ContactList contacts={channels} isChannel={true} />
         </div>
       </div>
       <ProfileInfo />
+
+      {/* Browse Channels Modal */}
+      <BrowseChannels
+        isOpen={showBrowseChannels}
+        onClose={() => setShowBrowseChannels(false)}
+      />
     </div>
   );
 }
