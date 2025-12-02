@@ -12,7 +12,12 @@ import { verifyToken } from "../middlewares/AuthMiddleware.js";
 import multer from "multer";
 
 const authRoutes = Router();
-const upload = multer({ dest: "uploads/profiles/" });
+const upload = multer({
+  dest: "uploads/profiles/",
+  limits: {
+    fileSize: 5 * 1024 * 1024, // 5MB limit for profile images
+  },
+});
 
 authRoutes.post("/signup", signup);
 authRoutes.post("/login", login);

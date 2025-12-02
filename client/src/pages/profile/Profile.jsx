@@ -82,17 +82,41 @@ export default function Profile() {
   };
 
   const handleImageChange = async (event) => {
-    const file = event.target.files[0];
-    console.log(file);
-    if (file) {
-      const formData = new FormData();
-      formData.append("profile-image", file);
-      const res = await apiClient.post(ADD_PROFILE_IMAGE_ROUTE, formData, {
-        withCredentials: true,
-      });
-      if (res.status === 200 && res.data.image) {
-        setUserInfo({ ...userInfo, image: res.data.image });
-        toast.success("Image updated successfully.");
+    try {
+      const file = event.target.files[0];
+      console.log(file);
+      if (file) {
+        const formData = new FormData();
+        formData.append("profile-image", file);
+        const res = await apiClient.post(ADD_PROFILE_IMAGE_ROUTE, formData, {
+          withCredentials: true,
+        });
+        if (res.status === 200 && res.data.image) {
+          setUserInfo({ ...userInfo, image: res.data.image });
+          toast.success("Image updated successfully.");
+        }
+      }
+    } catch (error) {
+      console.log({ error });
+
+      // Handle different types of errors
+      if (error.response) {
+        const errorData = error.response.data;
+        if (error.response.status === 400) {
+          if (errorData.error === "File too large") {
+            toast.error(
+              errorData.message || "Profile image size exceeds the 5MB limit"
+            );
+          } else {
+            toast.error(errorData.message || errorData || "Upload failed");
+          }
+        } else {
+          toast.error("Server error occurred during upload");
+        }
+      } else if (error.request) {
+        toast.error("Network error - please check your connection");
+      } else {
+        toast.error("Upload failed - please try again");
       }
     }
   };

@@ -4,7 +4,12 @@ import { getMessages, uploadFile } from "../controllers/MessagesController.js";
 import multer from "multer";
 
 const MessagesRoutes = Router();
-const upload = multer({ dest: "uploads/files" });
+const upload = multer({
+  dest: "uploads/files",
+  limits: {
+    fileSize: 50 * 1024 * 1024, // 50MB limit
+  },
+});
 
 MessagesRoutes.post("/get-messages", verifyToken, getMessages);
 MessagesRoutes.post(

@@ -104,6 +104,7 @@ npm install
 
 ```env
 PORT=3000
+JWT_KEY="TalkNoEncrypt"
 DATABASE_URL=mongodb+srv://<username>:<password>@cluster0.mongodb.net/talkno
 ORIGIN=http://localhost:5173
 ```
@@ -167,13 +168,78 @@ npm run dev
 
 ---
 
-- Group Chat
+- Channel
 
 <img src="client\public/channel-chat-image.png" alt="TalkNo Logo" >
 
 ---
 
-## 🙇‍♂️ Author
+## 🚀 All Features
+
+TalkNo provides a comprehensive set of features for modern real-time communication:
+
+### 🔐 **Authentication & User Management**
+
+- User registration and login system
+- JWT-based secure authentication
+- Cookie-based session management
+- Profile setup with custom avatars
+- User online/offline status tracking
+
+### 💬 **Core Messaging Features**
+
+- One-on-one private messaging
+- Real-time message delivery via Socket.IO
+- Message history and persistence
+- Message pagination
+- Load more messages dynamically (20 messages per page)
+- Efficient message loading for better performance
+- Emoji support and text formatting
+- Message timestamps
+
+### ⌨️ **Real-time Communication**
+
+- Instant message delivery
+- WebSocket-based real-time updates
+- Online user presence indicators
+- Seamless connection handling
+
+### 🏢 **Advanced Channel Management**
+
+- Group chat/channel creation
+- Custom channel names and descriptions
+- Member can join and leave channel
+- Channel information and member list display
+- Member count tracking
+
+### 📎 **File Sharing & Media**
+
+- Multi-format file uploads (images, videos, documents)
+- File preview and download functionality
+- Secure file storage and retrieval
+- Image display in chat interface
+- File size and type validation
+
+### 🎨 **UI/UX & Design**
+
+- Beautiful dark theme with gradient design
+- Toast notifications for user feedback
+- Responsive design for all devices
+- Custom avatar system with color generation
+- Hover effects and interactive elements
+- Modern component library (ShadCN UI)
+
+### ⚡ **Technical Features**
+
+- State management with Zustand
+- API client with Axios
+- Error handling and validation
+- Cross-platform compatibility
+- Optimized performance
+
+---
+
+## Author
 
 Made by [Mayur](https://github.com/mayursoni5)
 

@@ -7,6 +7,7 @@ import { useEffect, useRef, useState } from "react";
 import { GrAttachment } from "react-icons/gr";
 import { IoSend } from "react-icons/io5";
 import { RiEmojiStickerLine } from "react-icons/ri";
+import { toast } from "sonner";
 
 function MessageBar() {
   const emojiRef = useRef();
@@ -106,6 +107,26 @@ function MessageBar() {
     } catch (error) {
       setIsUploading(false);
       console.log({ error });
+
+      // Handle different types of errors
+      if (error.response) {
+        const errorData = error.response.data;
+        if (error.response.status === 400) {
+          if (errorData.error === "File too large") {
+            toast.error(
+              errorData.message || "File size exceeds the allowed limit"
+            );
+          } else {
+            toast.error(errorData.message || errorData || "Upload failed");
+          }
+        } else {
+          toast.error("Server error occurred during upload");
+        }
+      } else if (error.request) {
+        toast.error("Network error - please check your connection");
+      } else {
+        toast.error("Upload failed - please try again");
+      }
     }
   };
 
