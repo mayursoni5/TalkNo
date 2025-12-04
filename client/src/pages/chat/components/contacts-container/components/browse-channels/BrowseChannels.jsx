@@ -94,6 +94,9 @@ function BrowseChannels({ isOpen, onClose }) {
       setFilteredChannels((prev) => prev.filter((ch) => ch._id !== channelId));
 
       toast.success("Successfully joined the channel!");
+
+      // Close the Browse Channels dialog after successful join
+      onClose();
     } catch (error) {
       console.error("Error joining channel:", error);
       toast.error(error.response?.data || "Failed to join channel");
@@ -257,17 +260,6 @@ function BrowseChannels({ isOpen, onClose }) {
               </div>
             </ScrollArea>
           )}
-
-          {/* Footer */}
-          <div className="flex justify-end pt-4 border-t border-[#2a2b33] mt-4">
-            <Button
-              variant="outline"
-              onClick={onClose}
-              className="min-w-[100px]"
-            >
-              Close
-            </Button>
-          </div>
         </div>
       </DialogContent>
     </Dialog>

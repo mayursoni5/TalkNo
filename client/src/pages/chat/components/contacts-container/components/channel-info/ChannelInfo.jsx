@@ -26,7 +26,7 @@ function ChannelInfo({ isOpen, onClose, channelId }) {
   const [channelDetails, setChannelDetails] = useState(null);
   const [loading, setLoading] = useState(false);
   const [actionLoading, setActionLoading] = useState(false);
-  const { updateChannel, removeChannel } = useAppStore();
+  const { updateChannel, removeChannel, onlineUsers } = useAppStore();
 
   useEffect(() => {
     if (isOpen && channelId) {
@@ -188,32 +188,60 @@ function ChannelInfo({ isOpen, onClose, channelId }) {
                     <span className="text-sm font-medium">Channel Admin</span>
                   </div>
                   <div className="flex items-center gap-3 bg-[#2a2b33]/30 p-3 rounded-lg">
-                    <Avatar className="h-10 w-10">
-                      {channelDetails.admin.image ? (
-                        <AvatarImage
-                          src={`${HOST.replace(/\/$/, "")}/${
-                            channelDetails.admin.image
+                    <div className="relative">
+                      <Avatar className="h-10 w-10">
+                        {channelDetails.admin.image ? (
+                          <AvatarImage
+                            src={`${HOST.replace(/\/$/, "")}/${
+                              channelDetails.admin.image
+                            }`}
+                            alt="Admin"
+                            className="object-cover w-full h-full"
+                          />
+                        ) : (
+                          <div
+                            className={`h-10 w-10 text-lg font-semibold flex items-center justify-center rounded-full ${getColor(
+                              channelDetails.admin.color || "defaultColor"
+                            )}`}
+                          >
+                            {channelDetails.admin.firstName?.charAt(0) ||
+                              channelDetails.admin.email?.charAt(0) ||
+                              "A"}
+                          </div>
+                        )}
+                      </Avatar>
+                      {/* Admin Online/Offline Status Indicator */}
+                      <div
+                        className={`absolute -bottom-0 -right-0 w-3 h-3 rounded-full border-2 border-[#1b1c24] ${
+                          onlineUsers.has(channelDetails.admin._id)
+                            ? "bg-green-500"
+                            : "bg-gray-500"
+                        }`}
+                        title={
+                          onlineUsers.has(channelDetails.admin._id)
+                            ? "Online"
+                            : "Offline"
+                        }
+                      ></div>
+                    </div>
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2">
+                        <p className="font-medium">
+                          {channelDetails.admin.firstName || "Unknown"}{" "}
+                          {channelDetails.admin.lastName || ""}
+                        </p>
+                        <span
+                          className={`text-xs px-2 py-0.5 rounded-full ${
+                            onlineUsers.has(channelDetails.admin._id)
+                              ? "bg-green-500/20 text-green-400"
+                              : "bg-gray-500/20 text-gray-400"
                           }`}
-                          alt="Admin"
-                          className="object-cover w-full h-full"
-                        />
-                      ) : (
-                        <div
-                          className={`h-10 w-10 text-lg font-semibold flex items-center justify-center rounded-full ${getColor(
-                            channelDetails.admin.color || "defaultColor"
-                          )}`}
                         >
-                          {channelDetails.admin.firstName?.charAt(0) ||
-                            channelDetails.admin.email?.charAt(0) ||
-                            "A"}
-                        </div>
-                      )}
-                    </Avatar>
-                    <div>
-                      <p className="font-medium">
-                        {channelDetails.admin.firstName || "Unknown"}{" "}
-                        {channelDetails.admin.lastName || ""}
-                      </p>
+                          {onlineUsers.has(channelDetails.admin._id)
+                            ? "Online"
+                            : "Offline"}
+                        </span>
+                      </div>
                       <p className="text-xs text-neutral-400">
                         {channelDetails.admin.email || "No email"}
                       </p>
@@ -227,59 +255,82 @@ function ChannelInfo({ isOpen, onClose, channelId }) {
                   </div>
                 </div>
 
-                {/* Members List (only if user is a member) */}
                 {channelDetails.isUserMember && channelDetails.members && (
                   <div>
-                    <h3 className="text-sm font-medium text-neutral-300 mb-3">
-                      Members ({channelDetails.members.length})
-                    </h3>
-                    <div className="h-32 pr-2 overflow-y-auto custom-scrollbar">
-                      <div className="space-y-2 pb-2">
-                        {channelDetails.members.map((member) => (
-                          <div
-                            key={member._id}
-                            className="flex items-center gap-3 p-2 hover:bg-[#2a2b33]/30 rounded-lg"
-                          >
-                            <Avatar className="h-8 w-8">
-                              {member.image ? (
-                                <AvatarImage
-                                  src={`${HOST.replace(/\/$/, "")}/${
-                                    member.image
-                                  }`}
-                                  alt="Member"
-                                  className="object-cover w-full h-full"
-                                />
-                              ) : (
-                                <div
-                                  className={`h-8 w-8 text-sm font-semibold flex items-center justify-center rounded-full ${getColor(
-                                    member.color || "defaultColor"
-                                  )}`}
-                                >
-                                  {member.firstName?.charAt(0) ||
-                                    member.email?.charAt(0) ||
-                                    "M"}
-                                </div>
-                              )}
-                            </Avatar>
-                            <div className="flex-1 min-w-0">
-                              <p className="text-sm font-medium truncate">
-                                {member.firstName || "Unknown"}{" "}
-                                {member.lastName || ""}
-                              </p>
-                              <p className="text-xs text-neutral-400 truncate">
-                                {member.email || "No email"}
-                              </p>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
+                    <div className="flex items-center justify-between mb-3">
+                      <h3 className="text-sm font-medium text-neutral-300">
+                        Members ({channelDetails.members.length})
+                      </h3>
                     </div>
+                    <ScrollArea className="h-32 pr-2">
+                      <div className="space-y-2 pb-2">
+                        {channelDetails.members.map((member) => {
+                          const isOnline = onlineUsers.has(member._id);
+                          return (
+                            <div
+                              key={member._id}
+                              className="flex items-center gap-3 p-2 hover:bg-[#2a2b33]/30 rounded-lg"
+                            >
+                              <div className="relative">
+                                <Avatar className="h-8 w-8">
+                                  {member.image ? (
+                                    <AvatarImage
+                                      src={`${HOST.replace(/\/$/, "")}/${
+                                        member.image
+                                      }`}
+                                      alt="Member"
+                                      className="object-cover w-full h-full"
+                                    />
+                                  ) : (
+                                    <div
+                                      className={`h-8 w-8 text-sm font-semibold flex items-center justify-center rounded-full ${getColor(
+                                        member.color || "defaultColor"
+                                      )}`}
+                                    >
+                                      {member.firstName?.charAt(0) ||
+                                        member.email?.charAt(0) ||
+                                        "M"}
+                                    </div>
+                                  )}
+                                </Avatar>
+                                {/* Online/Offline Status Indicator */}
+                                <div
+                                  className={`absolute -bottom-0 -right-0 w-3 h-3 rounded-full border-2 border-[#1b1c24] ${
+                                    isOnline ? "bg-green-500" : "bg-gray-500"
+                                  }`}
+                                  title={isOnline ? "Online" : "Offline"}
+                                ></div>
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <div className="flex items-center gap-2">
+                                  <p className="text-sm font-medium truncate">
+                                    {member.firstName || "Unknown"}{" "}
+                                    {member.lastName || ""}
+                                  </p>
+                                  <span
+                                    className={`text-xs px-2 py-0.5 rounded-full ${
+                                      isOnline
+                                        ? "bg-green-500/20 text-green-400"
+                                        : "bg-gray-500/20 text-gray-400"
+                                    }`}
+                                  >
+                                    {isOnline ? "Online" : "Offline"}
+                                  </span>
+                                </div>
+                                <p className="text-xs text-neutral-400 truncate">
+                                  {member.email || "No email"}
+                                </p>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </ScrollArea>
                   </div>
                 )}
               </div>
             </div>
 
-            {/* Action Buttons - Fixed at bottom */}
             <div className="border-t border-[#2a2b33] p-6 pt-4">
               <div className="flex flex-col sm:flex-row gap-3">
                 {channelDetails.isUserAdmin ? (
